@@ -1,22 +1,22 @@
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
 from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 from datetime import datetime
 import uuid
 import random
-import os
 import requests
 from pydantic import BaseModel
 from typing import List
-from dotenv import load_dotenv
-
-load_dotenv()
 
 app = FastAPI(title="SteppeGuard API", version="1.0.0")
 
-# Allow CORS for frontend
+# Allow CORS for frontend (Vercel)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*"], # Allows Vercel to connect safely
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

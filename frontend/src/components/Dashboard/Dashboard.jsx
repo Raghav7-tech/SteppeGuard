@@ -3,7 +3,7 @@ import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'rec
 import { AlertTriangle, Wind, Droplets, ThermometerSun, Flame, Truck, Phone, AlertCircle, X } from 'lucide-react';
 
 export default function Dashboard({ districts, selectedDistrict, onClose }) {
-  const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://steppeguard.onrender.com';
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
   const topRisks = [...districts].sort((a, b) => b.fusion_score - a.fusion_score).slice(0, 5);
   const [officials, setOfficials] = useState([]);
   const [weather, setWeather] = useState(null);
@@ -12,17 +12,17 @@ export default function Dashboard({ districts, selectedDistrict, onClose }) {
 
   useEffect(() => {
     if (selectedDistrict) {
-      fetch(`${API_BASE}/api/officials/${selectedDistrict.district_id}`)
+      fetch(`${API_URL}/api/officials/${selectedDistrict.district_id}`)
         .then(res => res.json())
         .then(data => setOfficials(data.officials || []))
         .catch(err => console.error(err));
         
-      fetch(`${API_BASE}/api/weather/${selectedDistrict.district_id}`)
+      fetch(`${API_URL}/api/weather/${selectedDistrict.district_id}`)
         .then(res => res.json())
         .then(data => setWeather(data))
         .catch(err => console.error(err));
         
-      fetch(`${API_BASE}/api/predictions?district_id=${selectedDistrict.district_id}`)
+      fetch(`${API_URL}/api/predictions?district_id=${selectedDistrict.district_id}`)
         .then(res => res.json())
         .then(data => {
             if (data.predictions && data.predictions.length > 0) {
@@ -31,7 +31,7 @@ export default function Dashboard({ districts, selectedDistrict, onClose }) {
         })
         .catch(err => console.error(err));
         
-      fetch(`${API_BASE}/api/factors/${selectedDistrict.district_id}`)
+      fetch(`${API_URL}/api/factors/${selectedDistrict.district_id}`)
         .then(res => res.json())
         .then(data => setFactors(data.factors || []))
         .catch(err => console.error(err));

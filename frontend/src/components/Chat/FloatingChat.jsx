@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { MessageSquare, X, Send, Loader2 } from 'lucide-react';
 
 export default function FloatingChat() {
-  const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://steppeguard.onrender.com';
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
     { role: 'assistant', content: 'Сәлеметсіз бе! Здравствуйте! Hello! I am the SteppeGuard AI. Ask me anything about the current risk data or predictions in Kazakh, Russian, or English.' }
@@ -35,7 +35,7 @@ export default function FloatingChat() {
       // Remove default greeting from history to save context and start with user message
       const apiMessages = newMessages.filter(m => m.role !== 'assistant' || m.content !== 'Сәлеметсіз бе! Здравствуйте! Hello! I am the SteppeGuard AI. Ask me anything about the current risk data or predictions in Kazakh, Russian, or English.');
       
-      const response = await fetch(`${API_BASE}/api/chat`, {
+      const response = await fetch(`${API_URL}/api/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

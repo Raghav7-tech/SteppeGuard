@@ -6,7 +6,7 @@ import FloatingChat from './components/Chat/FloatingChat';
 import { Rnd } from 'react-rnd';
 import { ChevronRight, ChevronLeft } from 'lucide-react';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://steppeguard.onrender.com';
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 function App() {
   const [isDashboardMinimized, setIsDashboardMinimized] = useState(false);
@@ -25,7 +25,7 @@ function App() {
 
   useEffect(() => {
     // Fetch mock data
-    fetch(`${API_BASE}/api/observations?t=${Date.now()}`)
+    fetch(`${API_URL}/api/observations?t=${Date.now()}`)
       .then(res => res.json())
       .then(data => {
         setDistricts(data.observations);
@@ -33,7 +33,7 @@ function App() {
       .catch(err => console.error("Error fetching data", err));
       
       
-    fetch(`${API_BASE}/api/fires?confidence=nominal&timeframe_hours=168&t=${Date.now()}`)
+    fetch(`${API_URL}/api/fires?confidence=nominal&timeframe_hours=168&t=${Date.now()}`)
       .then(res => res.json())
       .then(data => {
         console.log("Raw Fire API Response:", data);
@@ -41,7 +41,7 @@ function App() {
       })
       .catch(err => console.error("Error fetching fires", err));
 
-    fetch(`${API_BASE}/api/wind_grid`)
+    fetch(`${API_URL}/api/wind_grid`)
       .then(res => res.json())
       .then(data => setWindGrid(data.grid || []))
       .catch(err => console.error("Error fetching wind grid", err));
