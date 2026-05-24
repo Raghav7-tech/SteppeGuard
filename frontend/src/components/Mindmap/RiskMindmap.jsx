@@ -7,7 +7,7 @@ export default function RiskMindmap({ district }) {
 
   useEffect(() => {
     if (district) {
-      fetch(`http://localhost:8000/api/factors/${district.district_id}`)
+      fetch(`https://steppeguard.onrender.com/api/factors/${district.district_id}`)
         .then(res => res.json())
         .then(data => setFactors(data.factors || []))
         .catch(err => console.error(err));

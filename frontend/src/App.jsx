@@ -21,7 +21,7 @@ function App() {
 
   useEffect(() => {
     // Fetch mock data
-    fetch(`http://localhost:8000/api/observations?t=${Date.now()}`)
+    fetch(`https://steppeguard.onrender.com/api/observations?t=${Date.now()}`)
       .then(res => res.json())
       .then(data => {
         setDistricts(data.observations);
@@ -29,7 +29,7 @@ function App() {
       .catch(err => console.error("Error fetching data", err));
       
       
-    fetch(`http://localhost:8000/api/fires?confidence=nominal&timeframe_hours=24&t=${Date.now()}`)
+    fetch(`https://steppeguard.onrender.com/api/fires?confidence=nominal&timeframe_hours=24&t=${Date.now()}`)
       .then(res => res.json())
       .then(data => {
         console.log("Raw Fire API Response:", data);
@@ -37,7 +37,7 @@ function App() {
       })
       .catch(err => console.error("Error fetching fires", err));
 
-    fetch('http://localhost:8000/api/wind_grid')
+    fetch('https://steppeguard.onrender.com/api/wind_grid')
       .then(res => res.json())
       .then(data => setWindGrid(data.grid || []))
       .catch(err => console.error("Error fetching wind grid", err));

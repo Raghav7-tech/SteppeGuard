@@ -34,7 +34,7 @@ export default function FloatingChat() {
       // Remove default greeting from history to save context and start with user message
       const apiMessages = newMessages.filter(m => m.role !== 'assistant' || m.content !== 'Сәлеметсіз бе! Здравствуйте! Hello! I am the SteppeGuard AI. Ask me anything about the current risk data or predictions in Kazakh, Russian, or English.');
       
-      const response = await fetch('http://localhost:8000/api/chat', {
+      const response = await fetch('https://steppeguard.onrender.com/api/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

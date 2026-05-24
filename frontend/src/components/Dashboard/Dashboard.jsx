@@ -11,17 +11,17 @@ export default function Dashboard({ districts, selectedDistrict }) {
 
   useEffect(() => {
     if (selectedDistrict) {
-      fetch(`http://localhost:8000/api/officials/${selectedDistrict.district_id}`)
+      fetch(`https://steppeguard.onrender.com/api/officials/${selectedDistrict.district_id}`)
         .then(res => res.json())
         .then(data => setOfficials(data.officials || []))
         .catch(err => console.error(err));
         
-      fetch(`http://localhost:8000/api/weather/${selectedDistrict.district_id}`)
+      fetch(`https://steppeguard.onrender.com/api/weather/${selectedDistrict.district_id}`)
         .then(res => res.json())
         .then(data => setWeather(data))
         .catch(err => console.error(err));
         
-      fetch(`http://localhost:8000/api/predictions?district_id=${selectedDistrict.district_id}`)
+      fetch(`https://steppeguard.onrender.com/api/predictions?district_id=${selectedDistrict.district_id}`)
         .then(res => res.json())
         .then(data => {
             if (data.predictions && data.predictions.length > 0) {
@@ -30,7 +30,7 @@ export default function Dashboard({ districts, selectedDistrict }) {
         })
         .catch(err => console.error(err));
         
-      fetch(`http://localhost:8000/api/factors/${selectedDistrict.district_id}`)
+      fetch(`https://steppeguard.onrender.com/api/factors/${selectedDistrict.district_id}`)
         .then(res => res.json())
         .then(data => setFactors(data.factors || []))
         .catch(err => console.error(err));
