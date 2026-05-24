@@ -454,5 +454,5 @@ def chat_with_gemini(req: ChatRequest):
         elif "wind" in user_msg:
             resp = "If wind speed doubles, the 48-hour spread probability for Kostanay could exceed 95%."
         else:
-            resp = f"I'm operating in fallback mode due to an API error. The dashboard shows critical risk in Kostanay."
+            resp = f"I'm operating in fallback mode due to an API error: {err_msg}"
         return {"response": resp}
