@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+pydantic
+apscheduler
+python-dotenv
+supabase
+scikit-learn
+numpy
+pandas
+geopandas
+rasterio
+sentinelhub
+resend
+requests

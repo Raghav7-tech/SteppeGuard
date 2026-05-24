@@ -1,0 +1,875 @@
+SteppeGuard
+AI Wildfire & Land Degradation Early Warning System
+Product Requirements Document & Technical Specification
+Hackathon
+2nd SmartEarth Hackathon 2026
+Theme
+Climate Monitoring & Prediction
+Team Skills
+Software / AI / ML + Data Science
+Deployment
+Vercel (FE) + Railway (BE) + Supabase
+Submission Deadline
+May 28, 2026 (Abstract)
+Event Dates
+June 06–07, 2026
+Prize Pool
+USD 1,750 | Target: 1st Place ($1,000)
+Document Version
+v1.0 — Final PRD
+Strategic Context
+Competition Level: Very Low — No prior hackathon has tackled Central Asian steppe with SAR-optical fusion.
+Judge Advantage: Nazarbayev University researchers actively publish on Kazakhstan land degradation.
+Technical Edge: SAR penetrates cloud & smoke; overcomes NDVI saturation unique to steppe environments.
+Data Sources: 100% free & open — Sentinel-1/2, NASA FIRMS, Open-Meteo. Zero API costs.
+1. Executive Summary
+SteppeGuard is a real-time AI-powered geospatial monitoring platform that detects active wildfires and tracks land degradation across the Kazakh steppe using free satellite data from the European Space Agency's Sentinel-1 (SAR) and Sentinel-2 (optical) missions. It addresses a critical monitoring gap: Kazakhstan has over 90 million hectares of degrading steppe — a biome that is poorly served by existing forest-fire tools — and suffers recurring seasonal wildfires that cause massive ecological and economic damage.
+The system provides district-level wildfire risk scoring updated every 12 hours, a 48-hour fire spread prediction model, an interactive geospatial dashboard with heatmap and interconnected mindmap visualisations, and automated SMS/email alerts for high-risk districts. The entire data pipeline uses exclusively free, open-access satellite data and APIs, making it immediately deployable on free cloud tiers.
+One-Line Pitch
+SteppeGuard uses Sentinel satellite fusion and a hybrid ML pipeline to give Kazakhstan's first AI-powered 48-hour wildfire early warning — directly from space, at zero data cost.
+Problem Statement
+Kazakhstan faces three compounding crises that SteppeGuard directly targets:
+Land degradation affects 66% of Kazakhstan's territory (90M+ hectares). Existing NDVI-based tools fail in steppe because the spectral signature of degraded grassland saturates NDVI — making degradation invisible to standard tooling.
+Steppe wildfires: Unlike boreal or tropical forests, Kazakh steppe fires spread at extreme speed with almost no canopy coverage to slow them. Existing early-warning systems (designed for forests) miss early ignition signatures in grassland.
+No regional AI solution exists: Global platforms (NASA FIRMS, Copernicus EMS) provide raw fire detection but no spread prediction, no degradation-integrated risk scoring, and no localised alert system for Kazakh administrative districts.
+Solution Overview
+SteppeGuard solves this through a 3-layer technical approach:
+Detection Layer — Spectral index pipeline (NBR, BSI, NDVI, BAI) on Sentinel-2 + SAR backscatter change detection on Sentinel-1. These two signals are fused to produce a per-pixel Fire Probability Score that works even under cloud/smoke cover.
+Prediction Layer — Random Forest model trained on historical Kazakhstan fire events (2019–2024) with wind, temperature, humidity, slope, and vegetation features. Outputs 48-hour spread probability maps.
+Presentation Layer — React dashboard with Leaflet heatmap + React Flow mindmap showing causal relationships between risk factors (wind → dry vegetation → ignition probability → district risk → alert status).
+2. Goals & Non-Goals
+MVP Goals (Must Have for Demo)
+Real-time Sentinel-2 spectral index computation for Kazakhstan bounding box
+SAR-optical fusion producing per-pixel fire probability heatmap
+48-hour wildfire spread prediction using Random Forest + Open-Meteo wind data
+Interactive Leaflet map with heatmap overlay and district alert badges
+React Flow mindmap showing interconnected risk factor graph
+District-level risk dashboard with ranking table
+Alert notification system (email via Resend API — free tier)
+Live deployment on Vercel + Railway + Supabase — shareable URL
+Stretch Goals (Nice to Have)
+SMS alerts via Twilio (free trial credits)
+Historical fire event replay slider (2020–2024)
+Soil degradation composite score overlaid on heatmap
+User-drawn region-of-interest polygon for custom area analysis
+Non-Goals (Explicitly Out of Scope)
+IoT sensor integration or ground-truth validation in field
+Training a new deep learning model from scratch (48hr constraint)
+Mobile native app (PWA-compatible web is sufficient)
+Coverage outside Kazakhstan for the hackathon demo
+User authentication / multi-tenant accounts
+3. Tech Stack Decision
+Complete Technology Decisions with Rationale
+Layer
+Technology
+Version
+Rationale
+Frontend Framework
+React + Vite
+18.x / 5.x
+Fast HMR, component ecosystem, Vercel-native
+Map Library
+Leaflet + React-Leaflet
+1.9.x
+Open-source, no API key, heatmap plugin built-in
+Node Graph / Mindmap
+React Flow
+12.x
+Floating nodes, edge animations, custom node types
+Styling
+Tailwind CSS
+3.4.x
+Utility-first, dark map theme, rapid prototyping
+Charts
+Recharts
+2.x
+React-native, no extra config, time-series support
+Backend Framework
+FastAPI (Python)
+0.115.x
+Async, auto Swagger docs, native numpy/rasterio support
+Satellite Data
+sentinelhub-py
+3.11.x
+Official ESA Python SDK, free Copernicus credentials
+Active Fire Data
+NASA FIRMS API
+v2
+Real-time VIIRS 375m, free MAP_KEY, JSON output
+Weather / Wind
+Open-Meteo API
+v1
+Free, no key, ERA5 + 7-day forecast, JSON
+ML Pipeline
+scikit-learn
+1.5.x
+Random Forest, fast training, joblib serialisation
+Geospatial
+rasterio + GeoPandas
+1.3.x / 1.0.x
+GeoTIFF I/O, vector operations, clip to KZ boundary
+Database
+Supabase (PostgreSQL)
+15.x
+Free tier, PostGIS extension, real-time subscriptions
+Task Queue
+APScheduler (in-process)
+3.10.x
+Lightweight cron for satellite data refresh, no Redis needed
+Email Alerts
+Resend API
+1.x
+3,000 free emails/month, simple Python SDK
+Frontend Deploy
+Vercel
+—
+Free tier, auto HTTPS, GitHub CI/CD, shareable URL
+Backend Deploy
+Railway
+—
+Free $5 credit/month, Docker support, env vars
+Database Host
+Supabase Cloud
+—
+Free 500MB, PostGIS, REST + WebSocket APIs
+Why This Stack Wins the Judging
+Cost: $0 in API/infrastructure costs. Every component is free-tier. Resume link stays live forever.
+Speed: Vite + FastAPI + pre-computed spectral indices = sub-2s dashboard load. Judges feel it.
+Uniqueness: React Flow mindmap showing causal fire risk chains has never appeared in a satellite monitoring hackathon.
+Impressiveness: Live Vercel URL + Railway API + real Sentinel data = fully production-grade architecture.
+4. Core Features — Prioritised MVP
+P#
+Feature Name
+Priority
+Effort
+Judge Impact
+F1
+Live Heatmap — Fire probability overlay on Leaflet map
+P0 — MVP Core
+Medium
+⭐⭐⭐⭐⭐ Visual centrepiece
+F2
+Spectral Index Pipeline (NBR, BSI, BAI, NDVI)
+P0 — MVP Core
+Medium
+⭐⭐⭐⭐⭐ Technical depth
+F3
+SAR + Optical Fusion Score
+P0 — MVP Core
+Medium-High
+⭐⭐⭐⭐⭐ Novel angle
+F4
+48-Hour Spread Prediction Map
+P0 — MVP Core
+High
+⭐⭐⭐⭐⭐ Unique feature
+F5
+React Flow Risk Mindmap
+P0 — MVP Core
+Medium
+⭐⭐⭐⭐⭐ Unique UI
+F6
+District Risk Dashboard + Ranking Table
+P0 — MVP Core
+Low
+⭐⭐⭐⭐ Decision-ready
+F7
+NASA FIRMS Active Fire Points Overlay
+P1 — High
+Low
+⭐⭐⭐⭐ Real-time data
+F8
+Email Alert System (Resend API)
+P1 — High
+Low
+⭐⭐⭐⭐ Real-world utility
+F9
+Weather Widget (Wind / Temp / Humidity)
+P1 — High
+Low
+⭐⭐⭐ Context layer
+F10
+Historical Replay Slider (2020–2024)
+P2 — Stretch
+Medium
+⭐⭐⭐ Storytelling
+F1 + F2 + F3: Detection & Heatmap Engine (Most Critical)
+The heatmap is the first thing judges see. It must show real satellite-derived data — not mock data. Here is exactly how it works:
+Spectral Indices Computed per Sentinel-2 Scene
+Index Formulae
+Index
+Formula
+What it detects
+Threshold
+NBR
+(NIR - SWIR2) / (NIR + SWIR2)
+Active burn scars, char
+< −0.10 = burned
+dNBR
+NBR_pre − NBR_post
+Change detection, severity
+> 0.27 = high severity
+BAI
+1 / ((0.1 − RED)² + (0.06 − NIR)²)
+Active flame, thermal emissivity
+High value = active fire
+BSI
+((SWIR1+RED) − (NIR+BLUE)) / ((SWIR1+RED) + (NIR+BLUE))
+Bare soil / degradation
+> 0.0 = exposed soil
+NDVI
+(NIR − RED) / (NIR + RED)
+Vegetation health / fuel load
+< 0.2 = low fuel, < 0.1 = degraded
+SAR Fusion Logic
+Sentinel-1 VV polarisation backscatter change (pre-fire vs. current) is computed as:
+SAR_change = (sigma_pre - sigma_current) / sigma_pre
+# Decrease in backscatter = vegetation loss = fire/degradation signal
+# Fusion Score (0-100)
+fusion_score = 0.40 * normalize(dNBR)
+             + 0.25 * normalize(BAI)
+             + 0.20 * normalize(SAR_change)
+             + 0.15 * normalize(BSI_anomaly)
+F4: 48-Hour Spread Prediction
+Random Forest model takes the following features and outputs a per-district spread probability for T+12h, T+24h, T+48h:
+Input Features (13 total)
+fusion_score (current)
+wind_speed_ms (Open-Meteo)
+wind_direction_deg
+temperature_c
+relative_humidity_pct
+NDVI (fuel load)
+slope_degrees (DEM)
+aspect_degrees
+district_historical_fire_count
+days_since_last_rain
+vegetation_type_encoded
+distance_to_road_km
+population_density
+Output
+spread_prob_12h: float [0–1]
+spread_prob_24h: float [0–1]
+spread_prob_48h: float [0–1]
+predicted_area_ha: float
+confidence_score: float
+dominant_spread_direction: string
+risk_level: enum {LOW, MEDIUM, HIGH, CRITICAL}
+F5: React Flow Risk Mindmap
+This is SteppeGuard's most visually unique feature. Unlike static dashboards, the mindmap shows the causal chain from environmental inputs to district alert status as animated floating nodes with weighted edges. No competing team will have this.
+Mindmap Node Architecture
+ROOT NODE: District Name + Current Risk Level (colour-coded badge)
+LEVEL 1 NODES: Wind Conditions | Vegetation State | Historical Risk | SAR Signal | Weather Forecast
+LEVEL 2 NODES: Wind Speed | Wind Direction | NDVI Value | dNBR Score | Fire Count (5yr) | Temperature | Humidity
+EDGES: Weighted by contribution to risk score. Animated pulse when value is in danger zone.
+INTERACTIVITY: Click any district on map → mindmap updates to show that district's causal graph.
+LAYOUT: Dagre auto-layout with custom node colours: GREEN (safe) → AMBER (watch) → RED (danger) → DARK RED (critical)
+5. Database Schemas & Data Models
+All tables are in Supabase (PostgreSQL 15 with PostGIS). The schema is designed for fast read queries since the dashboard refreshes every 5 minutes.
+districts
+Column
+Type
+Constraints
+Description
+id
+UUID
+PK, DEFAULT gen_random_uuid()
+Primary key
+name_en
+VARCHAR(100)
+NOT NULL
+District name in English
+name_kz
+VARCHAR(100)
+NOT NULL
+District name in Kazakh
+oblast
+VARCHAR(100)
+NOT NULL
+Province/region name
+geometry
+GEOMETRY(MULTIPOLYGON, 4326)
+NOT NULL
+District boundary (PostGIS)
+area_km2
+FLOAT
+NOT NULL
+Area in square kilometres
+population
+INTEGER
+Approximate population
+created_at
+TIMESTAMPTZ
+DEFAULT NOW()
+Record creation timestamp
+fire_observations
+Column
+Type
+Constraints
+Description
+id
+UUID
+PK
+Primary key
+district_id
+UUID
+FK → districts.id
+Which district
+observed_at
+TIMESTAMPTZ
+NOT NULL, INDEX
+Satellite overpass time
+sentinel_scene_id
+VARCHAR(200)
+NOT NULL
+ESA scene identifier
+ndvi_mean
+FLOAT
+Mean NDVI in district
+nbr_mean
+FLOAT
+Mean NBR value
+dnbr_mean
+FLOAT
+Mean dNBR (change)
+bai_max
+FLOAT
+Max BAI (active fire signal)
+bsi_mean
+FLOAT
+Mean Bare Soil Index
+sar_change_mean
+FLOAT
+Mean SAR backscatter change
+fusion_score
+FLOAT
+NOT NULL, CHECK(0-100)
+Composite risk score 0–100
+active_fire_points
+INTEGER
+DEFAULT 0
+NASA FIRMS hotspot count
+cloud_cover_pct
+FLOAT
+Sentinel-2 cloud coverage
+geometry
+GEOMETRY(POLYGON, 4326)
+Approximate fire polygon
+spread_predictions
+Column
+Type
+Constraints
+Description
+id
+UUID
+PK
+Primary key
+observation_id
+UUID
+FK → fire_observations.id
+Source observation
+district_id
+UUID
+FK → districts.id
+Target district
+predicted_at
+TIMESTAMPTZ
+NOT NULL
+When prediction was made
+horizon_hours
+INTEGER
+CHECK IN (12,24,48)
+Prediction horizon
+spread_probability
+FLOAT
+NOT NULL, CHECK(0-1)
+RF model output
+predicted_area_ha
+FLOAT
+Predicted burn area
+risk_level
+VARCHAR(20)
+CHECK IN (LOW,MEDIUM,HIGH,CRITICAL)
+Classified risk
+wind_speed_ms
+FLOAT
+Wind used in prediction
+wind_dir_deg
+FLOAT
+Wind direction degrees
+temperature_c
+FLOAT
+Temperature at prediction time
+model_version
+VARCHAR(20)
+DEFAULT '1.0.0'
+RF model version
+confidence_score
+FLOAT
+Model confidence [0–1]
+alerts
+Column
+Type
+Constraints
+Description
+id
+UUID
+PK
+Primary key
+district_id
+UUID
+FK → districts.id, INDEX
+Alerted district
+alert_type
+VARCHAR(30)
+CHECK IN (WATCH,WARNING,EMERGENCY)
+Alert severity
+triggered_at
+TIMESTAMPTZ
+NOT NULL, DEFAULT NOW()
+Alert creation time
+fusion_score
+FLOAT
+NOT NULL
+Score that triggered alert
+spread_prob_48h
+FLOAT
+48h prediction at trigger
+notified_emails
+TEXT[]
+Array of notified addresses
+notification_sent_at
+TIMESTAMPTZ
+When email was dispatched
+resolved_at
+TIMESTAMPTZ
+NULL = still active
+notes
+TEXT
+Free-text notes
+weather_snapshots
+Column
+Type
+Constraints
+Description
+id
+UUID
+PK
+Primary key
+district_id
+UUID
+FK → districts.id
+Location
+recorded_at
+TIMESTAMPTZ
+NOT NULL, INDEX
+Observation time
+wind_speed_ms
+FLOAT
+Wind speed m/s
+wind_dir_deg
+FLOAT
+Wind direction degrees
+temperature_c
+FLOAT
+Temperature Celsius
+humidity_pct
+FLOAT
+Relative humidity %
+precipitation_mm
+FLOAT
+Precipitation mm
+source
+VARCHAR(20)
+DEFAULT 'open-meteo'
+Data source identifier
+6. File Structure & Directory Tree
+The structure separates frontend (Vercel) and backend (Railway) cleanly. Each service can be developed, tested, and deployed independently. The notebooks/ folder is for offline ML work before the hackathon.
+steppeguard/
+├── frontend/                        # React + Vite app → deploys to Vercel
+│   ├── public/
+│   │   └── kz_districts.geojson     # Kazakhstan district boundaries
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── map/
+│   │   │   │   ├── FireHeatmap.jsx       # Leaflet heatmap layer
+│   │   │   │   ├── DistrictPolygons.jsx  # District boundary layer
+│   │   │   │   ├── FIRMSLayer.jsx        # NASA active fire points
+│   │   │   │   ├── SpreadPredLayer.jsx   # 48h spread overlay
+│   │   │   │   └── MapContainer.jsx      # Main map wrapper
+│   │   │   ├── mindmap/
+│   │   │   │   ├── RiskMindmap.jsx       # React Flow root component
+│   │   │   │   ├── nodes/
+│   │   │   │   │   ├── RootNode.jsx      # District + risk badge node
+│   │   │   │   │   ├── FactorNode.jsx    # L1 factor nodes
+│   │   │   │   │   └── MetricNode.jsx    # L2 metric leaf nodes
+│   │   │   │   ├── edges/
+│   │   │   │   │   └── WeightedEdge.jsx  # Animated weighted edges
+│   │   │   │   └── mindmapUtils.js       # Graph layout helpers
+│   │   │   ├── dashboard/
+│   │   │   │   ├── RiskRankingTable.jsx  # District risk ranking
+│   │   │   │   ├── AlertBanner.jsx       # Active alert strip
+│   │   │   │   ├── WeatherWidget.jsx     # Wind/temp/humidity
+│   │   │   │   ├── SpreadChart.jsx       # Recharts 48h forecast
+│   │   │   │   └── StatsBar.jsx          # Top summary metrics
+│   │   │   └── ui/
+│   │   │       ├── RiskBadge.jsx
+│   │   │       ├── LoadingSpinner.jsx
+│   │   │       └── Tooltip.jsx
+│   │   ├── hooks/
+│   │   │   ├── useFireData.js        # Polls /api/observations
+│   │   │   ├── usePredictions.js     # Fetches spread predictions
+│   │   │   ├── useWeather.js         # Fetches weather snapshots
+│   │   │   └── useAlerts.js          # Supabase realtime alerts
+│   │   ├── store/
+│   │   │   └── useAppStore.js        # Zustand global state
+│   │   ├── utils/
+│   │   │   ├── colorScale.js         # Risk score → colour
+│   │   │   ├── formatters.js         # Date, number formatters
+│   │   │   └── geoHelpers.js         # GeoJSON utilities
+│   │   ├── pages/
+│   │   │   ├── Dashboard.jsx         # Main layout
+│   │   │   └── AlertsPage.jsx        # Alert history
+│   │   ├── App.jsx
+│   │   └── main.jsx
+│   ├── package.json
+│   ├── vite.config.js
+│   ├── tailwind.config.js
+│   └── vercel.json                  # Vercel deployment config
+│
+├── backend/                          # FastAPI → deploys to Railway
+│   ├── app/
+│   │   ├── main.py                  # FastAPI app entry point
+│   │   ├── config.py                # Settings, env vars
+│   │   ├── database.py              # Supabase client setup
+│   │   ├── scheduler.py             # APScheduler cron jobs
+│   │   ├── routers/
+│   │   │   ├── observations.py      # GET /api/observations
+│   │   │   ├── predictions.py       # GET /api/predictions
+│   │   │   ├── alerts.py            # GET/POST /api/alerts
+│   │   │   ├── weather.py           # GET /api/weather
+│   │   │   └── districts.py         # GET /api/districts
+│   │   ├── services/
+│   │   │   ├── satellite/
+│   │   │   │   ├── sentinel_client.py    # sentinelhub-py wrapper
+│   │   │   │   ├── spectral_indices.py   # NBR, BSI, BAI, NDVI, dNBR
+│   │   │   │   ├── sar_processor.py      # Sentinel-1 backscatter
+│   │   │   │   └── fusion_engine.py      # SAR + optical fusion score
+│   │   │   ├── ml/
+│   │   │   │   ├── feature_builder.py    # Assemble 13-feature vector
+│   │   │   │   ├── spread_model.py       # RF model load + predict
+│   │   │   │   └── model_trainer.py      # Offline training script
+│   │   │   ├── firms_client.py           # NASA FIRMS API wrapper
+│   │   │   ├── weather_client.py         # Open-Meteo API wrapper
+│   │   │   └── alert_service.py          # Resend email dispatcher
+│   │   ├── models/
+│   │   │   ├── district.py          # Pydantic schemas
+│   │   │   ├── observation.py
+│   │   │   ├── prediction.py
+│   │   │   └── alert.py
+│   │   └── utils/
+│   │       ├── geo_utils.py         # Rasterio/GeoPandas helpers
+│   │       └── validators.py
+│   ├── ml_artifacts/
+│   │   ├── spread_model_v1.joblib   # Pre-trained RF model
+│   │   └── feature_scaler.joblib    # StandardScaler
+│   ├── data/
+│   │   └── kz_districts.geojson     # Kazakhstan admin boundaries
+│   ├── requirements.txt
+│   ├── Dockerfile
+│   └── railway.json                 # Railway deployment config
+│
+├── notebooks/                       # Offline training & EDA
+│   ├── 01_data_exploration.ipynb
+│   ├── 02_spectral_index_validation.ipynb
+│   ├── 03_model_training.ipynb      # Train RF on historical KZ data
+│   └── 04_fusion_calibration.ipynb
+│
+├── scripts/
+│   ├── seed_districts.py            # Load KZ districts into Supabase
+│   ├── backfill_historical.py       # Backfill 2020-2024 fire events
+│   └── test_pipeline.py             # End-to-end pipeline test
+│
+├── .env.example                     # All required environment variables
+├── docker-compose.yml               # Local development stack
+└── README.md
+7. API Contracts
+All endpoints follow REST conventions. FastAPI auto-generates OpenAPI/Swagger docs at /docs.
+Backend Endpoints
+GET /api/observations
+Param
+Type
+Required
+Description
+district_id
+UUID
+No
+Filter by district
+limit
+INT
+No (default 50)
+Max records to return
+since_hours
+INT
+No (default 24)
+Lookback window in hours
+# Response shape
+{
+  "observations": [
+    {
+      "id": "uuid",
+      "district_id": "uuid",
+      "district_name": "Akmola",
+      "observed_at": "2026-06-06T12:00:00Z",
+      "fusion_score": 78.4,
+      "risk_level": "HIGH",
+      "ndvi_mean": 0.18,
+      "dnbr_mean": 0.31,
+      "bai_max": 1240.5,
+      "sar_change_mean": 0.22,
+      "active_fire_points": 7,
+      "lat": 51.18, "lng": 71.44
+    }
+  ],
+  "total": 14,
+  "generated_at": "2026-06-06T12:05:00Z"
+}
+GET /api/predictions
+Param
+Type
+Required
+Description
+district_id
+UUID
+No
+Filter by district
+horizon
+INT
+No
+12, 24, or 48 (hours)
+# Response shape
+{
+  "predictions": [
+    {
+      "district_id": "uuid",
+      "district_name": "Kostanay",
+      "horizon_hours": 48,
+      "spread_probability": 0.73,
+      "risk_level": "CRITICAL",
+      "predicted_area_ha": 1240,
+      "confidence_score": 0.81,
+      "wind_speed_ms": 9.2,
+      "wind_dir_deg": 245,
+      "predicted_at": "2026-06-06T12:00:00Z"
+    }
+  ]
+}
+POST /api/alerts
+Field
+Type
+Required
+Description
+district_id
+UUID
+Yes
+District to alert
+alert_type
+ENUM
+Yes
+WATCH | WARNING | EMERGENCY
+notify_emails
+string[]
+No
+Email addresses to notify
+GET /api/weather/:district_id
+Response Field
+Type
+Description
+wind_speed_ms
+float
+Current wind speed m/s
+wind_dir_deg
+float
+Wind direction in degrees
+temperature_c
+float
+Temperature Celsius
+humidity_pct
+float
+Relative humidity %
+forecast_48h
+array
+Hourly forecast for next 48 hours
+External APIs Used
+External API Summary
+API
+Endpoint
+Free Limit
+Usage
+NASA FIRMS
+https://firms.modaps.eosdis.nasa.gov/api/area/
+5,000 req/10min
+Active fire hotspots (VIIRS 375m)
+Open-Meteo
+https://api.open-meteo.com/v1/forecast
+Unlimited (non-commercial)
+Wind, temp, humidity, 7-day forecast
+Copernicus CDSE
+https://dataspace.copernicus.eu/
+Free account, monthly quota
+Sentinel-1 SAR + Sentinel-2 optical
+Resend
+https://api.resend.com/emails
+3,000 emails/month free
+Alert email dispatch
+Supabase REST
+https://*.supabase.co/rest/v1/
+Free tier, 500MB, 2GB bandwidth
+Database read/write
+8. Step-by-Step Implementation Plan
+48-Hour Hackathon Timeline
+PRE-HACKATHON (Do Before June 6): Set up accounts, seed database, pre-train RF model, validate satellite access.
+Hour 00–08: Core backend pipeline (satellite → indices → fusion → DB).
+Hour 08–16: ML spread prediction + API endpoints.
+Hour 16–28: Frontend — map, heatmap, mindmap (most complex UI work).
+Hour 28–36: Dashboard, alerts, weather widget, end-to-end test.
+Hour 36–44: Deploy to Vercel + Railway, polish UI, fix bugs.
+Hour 44–48: Prepare demo, rehearse pitch, final smoke test.
+PHASE 0: PRE-HACKATHON SETUP  [1–2 days before]
+Create Copernicus Data Space account → generate OAuth2 client credentials
+Create NASA Earthdata account → generate FIRMS MAP_KEY
+Create Supabase project → enable PostGIS → run schema migration SQL
+Create Railway account + Vercel account + Resend account (connect domain or use sandbox)
+Clone repo, set up .env with all keys, verify local docker-compose runs
+Run scripts/seed_districts.py to load Kazakhstan district GeoJSON into Supabase
+Run notebooks/03_model_training.ipynb → save spread_model_v1.joblib and feature_scaler.joblib
+Validate pipeline with scripts/test_pipeline.py against one known 2024 fire event in Kostanay
+PHASE 1: BACKEND CORE  [Hour 00–08]
+FastAPI app skeleton: main.py, config.py (pydantic BaseSettings), database.py (supabase-py client)
+sentinel_client.py: OAuth2 token refresh, SentinelHubRequest for Sentinel-2 L2A + Sentinel-1 GRD
+spectral_indices.py: compute_nbr(), compute_bai(), compute_bsi(), compute_ndvi(), compute_dnbr() — all vectorised numpy
+sar_processor.py: load VV backscatter, compute log-ratio change vs 14-day baseline composite
+fusion_engine.py: weighted fusion of 4 signals → fusion_score [0–100] per district polygon
+firms_client.py: fetch VIIRS 375m points for KZ bounding box (48.5°N-55.5°N, 50°E-87°E)
+Database write: save fire_observations + weather_snapshots per scheduler run
+APScheduler: cron job every 12 hours calling full pipeline, immediate first run on startup
+Checkpoint: curl /api/observations returns real data from Sentinel scenes
+PHASE 2: ML PREDICTION LAYER  [Hour 08–16]
+feature_builder.py: for each district, assemble 13-feature vector from DB + Open-Meteo + DEM lookup
+weather_client.py: Open-Meteo forecast fetch → parse wind/temp/humidity, store weather_snapshots
+spread_model.py: load joblib model, predict_proba for T+12/24/48h, return structured dict
+Write predictions to spread_predictions table with model_version tag
+GET /api/predictions endpoint with district_id + horizon query params
+GET /api/weather/:district_id endpoint returning current + 48h forecast array
+Alert trigger logic: if fusion_score > 70 AND spread_prob_48h > 0.65 → create alert, call alert_service.py
+alert_service.py: Resend API email with district name, risk level, map screenshot (URL)
+POST /api/alerts + GET /api/alerts endpoints
+Checkpoint: spread prediction for all 17 districts returns in < 2 seconds
+PHASE 3: FRONTEND — MAP & HEATMAP  [Hour 16–22]
+Vite + React project init, Tailwind setup, dark theme CSS variables
+MapContainer.jsx: Leaflet map centred on Kazakhstan (48.0°N, 66.9°E), zoom 5, dark tile layer
+FireHeatmap.jsx: fetch /api/observations → transform to [lat, lng, intensity] array → L.heatLayer with gradient RED/AMBER/YELLOW
+DistrictPolygons.jsx: load kz_districts.geojson → GeoJSON layer, colour by risk_level, popup on click
+FIRMSLayer.jsx: fetch NASA FIRMS direct from API → render as CircleMarkers (bright orange, 4px radius)
+SpreadPredLayer.jsx: fetch T+48h predictions → render semi-transparent red polygons over at-risk districts
+Map legend component: explains heatmap gradient, fire points, prediction overlay
+useFireData hook: polling every 60 seconds with SWR/React Query, stale-while-revalidate
+Checkpoint: map shows real heatmap with district polygons and FIRMS points overlaid
+PHASE 4: FRONTEND — MINDMAP  [Hour 22–28]
+RiskMindmap.jsx: React Flow canvas with dark background, fit-view on district selection
+RootNode.jsx: large circular node, district name, animated risk badge (pulsing RED for CRITICAL)
+FactorNode.jsx: rectangular with icon, L1 factors: Wind | Vegetation | Historical | SAR Signal | Weather
+MetricNode.jsx: small pill node, actual metric value + threshold indicator (green/amber/red fill)
+WeightedEdge.jsx: custom edge with label showing contribution % (e.g. 'Wind: 31%'), animated dash for danger
+mindmapUtils.js: buildGraphData(districtData) → {nodes, edges} in React Flow format using Dagre layout
+District click handler in map → dispatches to Zustand store → Mindmap re-renders for selected district
+Minimap component + controls (zoom, fit-view, lock) in React Flow
+Checkpoint: clicking any district on map updates mindmap with that district's causal risk graph
+PHASE 5: FRONTEND — DASHBOARD  [Hour 28–36]
+StatsBar.jsx: 4 metric tiles — Active Fires | Districts at Risk | Highest Score | Alert Count
+RiskRankingTable.jsx: all districts sorted by fusion_score, coloured risk badge, sortable columns
+WeatherWidget.jsx: compass rose for wind direction + current temp/humidity for selected district
+SpreadChart.jsx: Recharts AreaChart with T+12/24/48h spread probability for selected district
+AlertBanner.jsx: red strip at top when EMERGENCY alerts active, dismiss button
+AlertsPage.jsx: table of all historical alerts with status (active/resolved) + email log
+Responsive layout: map takes 60% width, dashboard panel takes 40%, mindmap in collapsible panel
+Dark theme consistent across all components (slate-900 background, matching map)
+Checkpoint: full dashboard with map + mindmap + stats panel renders with real data, no console errors
+PHASE 6: DEPLOYMENT & POLISH  [Hour 36–44]
+Backend: Dockerfile → Railway deploy → set all env vars → verify /api/health returns 200
+Frontend: update .env.VITE_API_URL to Railway URL → Vercel deploy via GitHub push → verify live URL
+Supabase: verify production DB has seeded districts + historical observations populated
+End-to-end smoke test: open Vercel URL → map loads → click district → mindmap updates → email alert fires
+Performance: check Lighthouse score, ensure map tiles load < 3s, heatmap renders < 1s
+UI polish: loading skeletons for all async components, error boundaries, empty states
+Demo data: ensure at least one CRITICAL alert exists in DB (seed a historical Kostanay 2024 event)
+Write README with architecture diagram, live URL, and team credits
+PHASE 7: DEMO PREPARATION  [Hour 44–48]
+Draft 3-minute pitch: Problem (1 sentence) → Solution (2 sentences) → Live Demo (90 seconds) → Impact (30 seconds)
+Demo flow: open live URL → zoom to Kostanay → heatmap fires up → click district → mindmap appears → show prediction chart → show alert email
+Prepare fallback: screenshot GIF if internet fails during presentation
+Key talking points for judges: SAR-optical fusion overcomes NDVI saturation unique to steppe, 100% free data pipeline, live deployment not prototype
+Anticipate Q&A: 'How accurate is it?' (cite dNBR validation on 2024 Kostanay fire), 'How does it scale?' (Sentinel coverage is global)
+9. Environment Variables (.env)
+# ── Copernicus Data Space (ESA Sentinel) ──────────────
+COPERNICUS_CLIENT_ID=your_client_id
+COPERNICUS_CLIENT_SECRET=your_client_secret
+# ── NASA FIRMS ────────────────────────────────────────
+FIRMS_MAP_KEY=your_firms_map_key
+# ── Supabase ──────────────────────────────────────────
+SUPABASE_URL=https://xxxx.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+DATABASE_URL=postgresql://postgres:pass@db.xxxx.supabase.co:5432/postgres
+# ── Resend (Email Alerts) ─────────────────────────────
+RESEND_API_KEY=re_xxxx
+ALERT_FROM_EMAIL=alerts@steppeguard.app
+# ── Open-Meteo (no key required) ─────────────────────
+# Free, no authentication needed
+# ── App Config ────────────────────────────────────────
+APP_ENV=production
+LOG_LEVEL=INFO
+PIPELINE_REFRESH_HOURS=12
+KZ_BBOX_WEST=50.0
+KZ_BBOX_SOUTH=40.5
+KZ_BBOX_EAST=87.4
+KZ_BBOX_NORTH=55.5
+# ── Frontend (prefix VITE_) ───────────────────────────
+VITE_API_URL=https://steppeguard-api.railway.app
+VITE_FIRMS_MAP_KEY=your_firms_map_key
+VITE_SUPABASE_URL=https://xxxx.supabase.co
+VITE_SUPABASE_ANON_KEY=your_anon_key
+10. Risk Register & Mitigations
+Risk
+Severity
+Likelihood
+Mitigation
+Copernicus API throttling during hackathon
+High
+Medium
+Cache all satellite data to Supabase 24hr before; serve from DB, not live API during demo
+Sentinel scene has >80% cloud cover over KZ
+Medium
+Medium
+Query nearest cloud-free scene using sentinelhub cloud mask filter; fallback to 7-day composite
+RF model insufficient accuracy on test data
+High
+Low
+Pre-validate on 2024 Kostanay fire before hackathon; have rule-based fallback (threshold on fusion_score)
+Railway free tier cold-start latency (>30s)
+Medium
+High
+Set RAILWAY_HEALTHCHECK_PATH, ping endpoint via cron to keep warm; add loading animation
+React Flow mindmap rendering slowly on mobile
+Low
+Medium
+Set initialViewport, disable animations on mobile breakpoint, use MiniMap component
+Open-Meteo forecast unavailable for KZ region
+Low
+Low
+ERA5 historical always available; fallback to seasonal wind averages cached in DB
+Final Recommendation to Coding Agent
+1. Start with Phase 0 setup BEFORE the hackathon starts. Pre-train the model. Seed the DB.
+2. Build and validate the satellite pipeline FIRST (Phase 1). Without real data, the UI is meaningless.
+3. The mindmap (Phase 4) is the secret weapon. Budget 6 hours for it. Do NOT cut it if time is tight — cut the alerts page instead.
+4. Use pre-computed data during the demo. Do not call Sentinel live during judging — serve cached observations from Supabase.
+5. The demo flow must take < 3 minutes. Practice it 5 times before the event.
+6. Your live Vercel URL is a resume asset. Make sure it stays live after the hackathon.
