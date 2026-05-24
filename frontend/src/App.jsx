@@ -4,8 +4,12 @@ import Dashboard from './components/Dashboard/Dashboard';
 import RiskMindmap from './components/Mindmap/RiskMindmap';
 import FloatingChat from './components/Chat/FloatingChat';
 import { Rnd } from 'react-rnd';
+import { ChevronRight, ChevronLeft } from 'lucide-react';
+
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://steppeguard.onrender.com';
 
 function App() {
+  const [isDashboardMinimized, setIsDashboardMinimized] = useState(false);
   const [districts, setDistricts] = useState([]);
   const [selectedDistrictId, setSelectedDistrictId] = useState(null);
   const [fires, setFires] = useState([]);
@@ -21,7 +25,7 @@ function App() {
 
   useEffect(() => {
     // Fetch mock data
-    fetch(`https://steppeguard.onrender.com/api/observations?t=${Date.now()}`)
+    fetch(`${API_BASE}/api/observations?t=${Date.now()}`)
       .then(res => res.json())
       .then(data => {
         setDistricts(data.observations);
@@ -29,7 +33,7 @@ function App() {
       .catch(err => console.error("Error fetching data", err));
       
       
-    fetch(`https://steppeguard.onrender.com/api/fires?confidence=nominal&timeframe_hours=24&t=${Date.now()}`)
+    fetch(`${API_BASE}/api/fires?confidence=nominal&timeframe_hours=168&t=${Date.now()}`)
       .then(res => res.json())
       .then(data => {
         console.log("Raw Fire API Response:", data);
@@ -37,7 +41,7 @@ function App() {
       })
       .catch(err => console.error("Error fetching fires", err));
 
-    fetch('https://steppeguard.onrender.com/api/wind_grid')
+    fetch(`${API_BASE}/api/wind_grid`)
       .then(res => res.json())
       .then(data => setWindGrid(data.grid || []))
       .catch(err => console.error("Error fetching wind grid", err));
@@ -69,11 +73,27 @@ function App() {
            </button>
          </div>
       </div>
-      <div className="w-1/3 min-w-[400px] h-full flex flex-col border-l border-slate-800 z-10 bg-slate-950/95 backdrop-blur-md overflow-y-auto">
-         <div className="p-4">
+      <div className={`h-full flex flex-col border-l border-white/10 z-10 bg-slate-900/80 backdrop-blur-2xl overflow-hidden transition-all duration-500 ease-in-out relative ${isDashboardMinimized ? 'w-0 min-w-0 border-l-0 opacity-0' : 'w-1/3 min-w-[400px] opacity-100 shadow-2xl'}`}>
+         <button 
+           onClick={() => setIsDashboardMinimized(true)}
+           className="absolute top-1/2 left-0 transform -translate-y-1/2 -translate-x-1/2 bg-gradient-to-r from-blue-600 to-indigo-600 p-1.5 rounded-full border-2 border-slate-900 text-white z-50 shadow-[0_0_15px_rgba(79,70,229,0.6)] hover:scale-110 hover:shadow-[0_0_25px_rgba(79,70,229,0.8)] transition-all duration-300"
+           style={{ zIndex: 1000 }}
+         >
+           <ChevronRight size={20} />
+         </button>
+         
+         <div className="p-4 w-full h-full overflow-y-auto custom-scrollbar">
             <Dashboard districts={districts} selectedDistrict={selectedDistrict} onClose={() => setSelectedDistrictId(null)} />
          </div>
       </div>
+      
+      {/* External toggle button when minimized */}
+      <button 
+         onClick={() => setIsDashboardMinimized(false)}
+         className={`absolute top-1/2 right-4 transform -translate-y-1/2 bg-gradient-to-r from-indigo-600 to-blue-600 p-2 rounded-full border-2 border-slate-900 text-white z-50 shadow-[0_0_20px_rgba(79,70,229,0.6)] hover:scale-110 transition-all duration-500 ease-in-out ${isDashboardMinimized ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10 pointer-events-none'}`}
+       >
+         <ChevronLeft size={24} />
+       </button>
       {selectedDistrict && showMindmap && (
         <Rnd
           default={{

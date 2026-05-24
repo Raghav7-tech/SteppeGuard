@@ -3,6 +3,7 @@ import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'rec
 import { AlertTriangle, Wind, Droplets, ThermometerSun, Flame, Truck, Phone, AlertCircle, X } from 'lucide-react';
 
 export default function Dashboard({ districts, selectedDistrict, onClose }) {
+  const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://steppeguard.onrender.com';
   const topRisks = [...districts].sort((a, b) => b.fusion_score - a.fusion_score).slice(0, 5);
   const [officials, setOfficials] = useState([]);
   const [weather, setWeather] = useState(null);
@@ -11,17 +12,17 @@ export default function Dashboard({ districts, selectedDistrict, onClose }) {
 
   useEffect(() => {
     if (selectedDistrict) {
-      fetch(`https://steppeguard.onrender.com/api/officials/${selectedDistrict.district_id}`)
+      fetch(`${API_BASE}/api/officials/${selectedDistrict.district_id}`)
         .then(res => res.json())
         .then(data => setOfficials(data.officials || []))
         .catch(err => console.error(err));
         
-      fetch(`https://steppeguard.onrender.com/api/weather/${selectedDistrict.district_id}`)
+      fetch(`${API_BASE}/api/weather/${selectedDistrict.district_id}`)
         .then(res => res.json())
         .then(data => setWeather(data))
         .catch(err => console.error(err));
         
-      fetch(`https://steppeguard.onrender.com/api/predictions?district_id=${selectedDistrict.district_id}`)
+      fetch(`${API_BASE}/api/predictions?district_id=${selectedDistrict.district_id}`)
         .then(res => res.json())
         .then(data => {
             if (data.predictions && data.predictions.length > 0) {
@@ -30,7 +31,7 @@ export default function Dashboard({ districts, selectedDistrict, onClose }) {
         })
         .catch(err => console.error(err));
         
-      fetch(`https://steppeguard.onrender.com/api/factors/${selectedDistrict.district_id}`)
+      fetch(`${API_BASE}/api/factors/${selectedDistrict.district_id}`)
         .then(res => res.json())
         .then(data => setFactors(data.factors || []))
         .catch(err => console.error(err));
@@ -45,27 +46,28 @@ export default function Dashboard({ districts, selectedDistrict, onClose }) {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-slate-100 tracking-tight">SteppeGuard Dashboard</h2>
-        <div className="bg-red-500/20 text-red-400 px-3 py-1 rounded-full text-sm font-medium border border-red-500/30 flex items-center gap-2 shadow-[0_0_15px_rgba(239,68,68,0.2)]">
+        <h2 className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400 tracking-tight">SteppeGuard Dashboard</h2>
+        <div className="bg-red-500/20 text-red-400 px-3 py-1 rounded-full text-sm font-bold border border-red-500/40 flex items-center gap-2 shadow-[0_0_20px_rgba(239,68,68,0.3)] animate-pulse">
           <AlertTriangle size={16} /> Live Data Active
         </div>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl shadow-lg relative overflow-hidden group">
-           <div className="absolute top-0 right-0 p-4 text-slate-700 group-hover:text-red-500/20 transition-colors"><Flame size={48} /></div>
-           <p className="text-slate-400 text-sm font-medium mb-1">Active Fires</p>
-           <p className="text-3xl font-bold text-slate-100">{districts.reduce((sum, d) => sum + d.active_fire_points, 0)}</p>
+        <div className="bg-slate-800/40 backdrop-blur-md border border-slate-700/50 p-5 rounded-2xl shadow-xl relative overflow-hidden group hover:border-red-500/30 transition-all">
+           <div className="absolute -top-4 -right-4 p-4 text-red-500/10 group-hover:text-red-500/20 transition-colors transform group-hover:scale-110 duration-500"><Flame size={80} /></div>
+           <p className="text-slate-400 text-sm font-semibold mb-1">Active Fires</p>
+           <p className="text-4xl font-black text-white drop-shadow-md">{districts.reduce((sum, d) => sum + d.active_fire_points, 0)}</p>
         </div>
-        <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl shadow-lg relative overflow-hidden group">
-           <div className="absolute top-0 right-0 p-4 text-slate-700 group-hover:text-orange-500/20 transition-colors"><AlertTriangle size={48} /></div>
-           <p className="text-slate-400 text-sm font-medium mb-1">Districts at Risk</p>
-           <p className="text-3xl font-bold text-slate-100">{districts.filter(d => d.risk_level === 'CRITICAL' || d.risk_level === 'HIGH').length}</p>
+        <div className="bg-slate-800/40 backdrop-blur-md border border-slate-700/50 p-5 rounded-2xl shadow-xl relative overflow-hidden group hover:border-orange-500/30 transition-all">
+           <div className="absolute -top-4 -right-4 p-4 text-orange-500/10 group-hover:text-orange-500/20 transition-colors transform group-hover:scale-110 duration-500"><AlertTriangle size={80} /></div>
+           <p className="text-slate-400 text-sm font-semibold mb-1">Districts at Risk</p>
+           <p className="text-4xl font-black text-white drop-shadow-md">{districts.filter(d => d.risk_level === 'CRITICAL' || d.risk_level === 'HIGH').length}</p>
         </div>
       </div>
 
       {selectedDistrict ? (
-        <div className="bg-slate-900 border border-slate-800 p-5 rounded-xl shadow-lg">
+        <div className="bg-slate-800/60 backdrop-blur-xl border border-slate-700/50 p-6 rounded-2xl shadow-2xl relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
           <div className="flex justify-between items-start mb-6">
             <div>
               <h3 className="text-xl font-bold text-slate-100">{selectedDistrict.district_name}</h3>
@@ -90,20 +92,20 @@ export default function Dashboard({ districts, selectedDistrict, onClose }) {
           </div>
 
           <div className="grid grid-cols-3 gap-4 mb-6">
-            <div className="flex flex-col items-center p-3 bg-slate-950 rounded-lg border border-slate-800">
-               <Wind className="text-blue-400 mb-2" />
-               <span className="text-lg font-bold">{weather ? `${weather.wind_speed_ms} m/s` : '-- m/s'}</span>
-               <span className="text-xs text-slate-500 uppercase">Wind</span>
+            <div className="flex flex-col items-center p-4 bg-slate-900/50 backdrop-blur-sm rounded-xl border border-slate-700/50 shadow-inner hover:border-blue-500/30 transition-colors">
+               <Wind className="text-blue-400 mb-2 drop-shadow-[0_0_5px_rgba(96,165,250,0.5)]" />
+               <span className="text-lg font-bold text-white">{weather ? `${weather.wind_speed_ms} m/s` : '-- m/s'}</span>
+               <span className="text-xs text-slate-400 uppercase font-semibold">Wind</span>
             </div>
-            <div className="flex flex-col items-center p-3 bg-slate-950 rounded-lg border border-slate-800">
-               <ThermometerSun className="text-orange-400 mb-2" />
-               <span className="text-lg font-bold">{weather ? `${weather.temperature_c}°C` : '--°C'}</span>
-               <span className="text-xs text-slate-500 uppercase">Temp</span>
+            <div className="flex flex-col items-center p-4 bg-slate-900/50 backdrop-blur-sm rounded-xl border border-slate-700/50 shadow-inner hover:border-orange-500/30 transition-colors">
+               <ThermometerSun className="text-orange-400 mb-2 drop-shadow-[0_0_5px_rgba(251,146,60,0.5)]" />
+               <span className="text-lg font-bold text-white">{weather ? `${weather.temperature_c}°C` : '--°C'}</span>
+               <span className="text-xs text-slate-400 uppercase font-semibold">Temp</span>
             </div>
-            <div className="flex flex-col items-center p-3 bg-slate-950 rounded-lg border border-slate-800">
-               <Droplets className="text-cyan-400 mb-2" />
-               <span className="text-lg font-bold">{weather ? `${weather.humidity_pct}%` : '--%'}</span>
-               <span className="text-xs text-slate-500 uppercase">Humidity</span>
+            <div className="flex flex-col items-center p-4 bg-slate-900/50 backdrop-blur-sm rounded-xl border border-slate-700/50 shadow-inner hover:border-cyan-500/30 transition-colors">
+               <Droplets className="text-cyan-400 mb-2 drop-shadow-[0_0_5px_rgba(34,211,238,0.5)]" />
+               <span className="text-lg font-bold text-white">{weather ? `${weather.humidity_pct}%` : '--%'}</span>
+               <span className="text-xs text-slate-400 uppercase font-semibold">Humidity</span>
             </div>
           </div>
 
@@ -192,25 +194,25 @@ export default function Dashboard({ districts, selectedDistrict, onClose }) {
       )}
 
       <div>
-        <h3 className="text-lg font-bold text-slate-200 mb-4">Highest Risk Districts</h3>
-        <div className="bg-slate-900 rounded-xl border border-slate-800 overflow-hidden shadow-lg">
+        <h3 className="text-lg font-bold text-slate-100 mb-4 tracking-tight">Highest Risk Districts</h3>
+        <div className="bg-slate-800/40 backdrop-blur-md rounded-2xl border border-slate-700/50 overflow-hidden shadow-xl">
           <table className="w-full text-left text-sm">
-            <thead className="bg-slate-800/50 text-slate-400 border-b border-slate-800">
+            <thead className="bg-slate-900/60 text-slate-300 border-b border-slate-700/50">
               <tr>
-                <th className="p-3 font-medium">District</th>
-                <th className="p-3 font-medium text-right">Fusion Score</th>
-                <th className="p-3 font-medium text-center">Status</th>
+                <th className="p-4 font-semibold uppercase tracking-wider text-xs">District</th>
+                <th className="p-4 font-semibold uppercase tracking-wider text-xs text-right">Fusion Score</th>
+                <th className="p-4 font-semibold uppercase tracking-wider text-xs text-center">Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/50">
+            <tbody className="divide-y divide-slate-700/30">
               {topRisks.map((d) => (
-                <tr key={d.id} className="hover:bg-slate-800/30 transition-colors">
-                  <td className="p-3 font-medium text-slate-200">{d.district_name}</td>
-                  <td className="p-3 text-right font-mono">{d.fusion_score.toFixed(1)}</td>
-                  <td className="p-3">
-                     <div className={`mx-auto w-max px-2 py-0.5 rounded text-xs font-bold ${
-                        d.risk_level === 'CRITICAL' ? 'bg-red-500/20 text-red-400 border border-red-500/30' :
-                        'bg-orange-500/20 text-orange-400 border border-orange-500/30'
+                <tr key={d.id} className="hover:bg-slate-700/30 transition-colors group">
+                  <td className="p-4 font-bold text-slate-200 group-hover:text-white transition-colors">{d.district_name}</td>
+                  <td className="p-4 text-right font-mono font-medium">{d.fusion_score.toFixed(1)}</td>
+                  <td className="p-4">
+                     <div className={`mx-auto w-max px-3 py-1 rounded-full text-xs font-bold shadow-sm ${
+                        d.risk_level === 'CRITICAL' ? 'bg-red-500/20 text-red-400 border border-red-500/30 shadow-[0_0_10px_rgba(239,68,68,0.2)]' :
+                        'bg-orange-500/20 text-orange-400 border border-orange-500/30 shadow-[0_0_10px_rgba(249,115,22,0.2)]'
                      }`}>
                        {d.risk_level}
                      </div>
