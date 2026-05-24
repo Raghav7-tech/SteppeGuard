@@ -435,7 +435,7 @@ def chat_with_gemini(req: ChatRequest):
     }
     
     try:
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={api_key}"
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}"
         r = requests.post(url, headers=headers, json=data)
         r.raise_for_status()
         result = r.json()

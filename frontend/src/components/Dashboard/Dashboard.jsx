@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import { AlertTriangle, Wind, Droplets, ThermometerSun, Flame, Truck, Phone, AlertCircle } from 'lucide-react';
+import { AlertTriangle, Wind, Droplets, ThermometerSun, Flame, Truck, Phone, AlertCircle, X } from 'lucide-react';
 
-export default function Dashboard({ districts, selectedDistrict }) {
+export default function Dashboard({ districts, selectedDistrict, onClose }) {
   const topRisks = [...districts].sort((a, b) => b.fusion_score - a.fusion_score).slice(0, 5);
   const [officials, setOfficials] = useState([]);
   const [weather, setWeather] = useState(null);
@@ -71,12 +71,21 @@ export default function Dashboard({ districts, selectedDistrict }) {
               <h3 className="text-xl font-bold text-slate-100">{selectedDistrict.district_name}</h3>
               <p className="text-slate-400 text-sm">Detailed Analysis</p>
             </div>
-            <div className={`px-3 py-1 rounded font-bold text-sm ${
-                selectedDistrict.risk_level === 'CRITICAL' ? 'bg-red-500 text-white shadow-[0_0_10px_rgba(239,68,68,0.5)]' :
-                selectedDistrict.risk_level === 'HIGH' ? 'bg-orange-500 text-white shadow-[0_0_10px_rgba(249,115,22,0.5)]' :
-                'bg-green-500 text-white'
-              }`}>
-              {selectedDistrict.risk_level}
+            <div className="flex items-center gap-3">
+              <div className={`px-3 py-1 rounded font-bold text-sm ${
+                  selectedDistrict.risk_level === 'CRITICAL' ? 'bg-red-500 text-white shadow-[0_0_10px_rgba(239,68,68,0.5)]' :
+                  selectedDistrict.risk_level === 'HIGH' ? 'bg-orange-500 text-white shadow-[0_0_10px_rgba(249,115,22,0.5)]' :
+                  'bg-green-500 text-white'
+                }`}>
+                {selectedDistrict.risk_level}
+              </div>
+              <button 
+                onClick={onClose} 
+                className="text-slate-400 hover:text-white transition-colors"
+                title="Close Info"
+              >
+                <X size={20} />
+              </button>
             </div>
           </div>
 

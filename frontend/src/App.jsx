@@ -71,7 +71,7 @@ function App() {
       </div>
       <div className="w-1/3 min-w-[400px] h-full flex flex-col border-l border-slate-800 z-10 bg-slate-950/95 backdrop-blur-md overflow-y-auto">
          <div className="p-4">
-            <Dashboard districts={districts} selectedDistrict={selectedDistrict} />
+            <Dashboard districts={districts} selectedDistrict={selectedDistrict} onClose={() => setSelectedDistrictId(null)} />
          </div>
       </div>
       {selectedDistrict && showMindmap && (
