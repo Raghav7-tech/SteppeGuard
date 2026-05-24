@@ -50,8 +50,8 @@ function App() {
   const selectedDistrict = districts.find(d => d.district_id === selectedDistrictId);
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-slate-950 text-slate-50 font-sans relative">
-      <div className="flex-1 h-full relative z-0">
+    <div className="flex h-screen w-screen overflow-hidden bg-zinc-950 text-zinc-50 font-sans relative">
+      <div className="absolute inset-0 z-0">
          <MapContainerComponent 
            districts={districts} 
            fires={fires}
@@ -60,39 +60,34 @@ function App() {
            onSelectDistrict={setSelectedDistrictId}
            selectedDistrictId={selectedDistrictId}
          />
-         <div className="absolute top-4 left-16 z-[1000]">
+         <div className="absolute top-6 left-6 z-[1000] glass-panel px-1.5 py-1.5 rounded-2xl flex items-center shadow-2xl border border-white/5">
            <button 
              onClick={() => setShowWind(!showWind)}
-             className={`px-4 py-2 rounded font-bold shadow-lg transition-colors border ${
+             className={`px-5 py-2.5 rounded-xl font-bold transition-all duration-300 text-xs tracking-widest uppercase flex items-center gap-2 ${
                showWind 
-                 ? 'bg-blue-600 border-blue-500 text-white' 
-                 : 'bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700'
+                 ? 'bg-blue-600/90 text-white shadow-[0_0_20px_rgba(37,99,235,0.6)] border border-blue-500/50' 
+                 : 'bg-transparent text-zinc-400 hover:text-white hover:bg-white/5 border border-transparent'
              }`}
            >
-             Wind View: {showWind ? 'ON' : 'OFF'}
+             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12.8 19.6A2 2 0 1 0 14 16H2"/><path d="M17.5 8a2.5 2.5 0 1 0 2-4H2"/><path d="M9.8 8.6A2 2 0 1 1 11 12H2"/></svg>
+             Wind Layer
            </button>
          </div>
       </div>
-      <div className={`h-full flex flex-col border-l border-white/10 z-10 bg-slate-900/80 backdrop-blur-2xl overflow-hidden transition-all duration-500 ease-in-out relative ${isDashboardMinimized ? 'w-0 min-w-0 border-l-0 opacity-0' : 'w-1/3 min-w-[400px] opacity-100 shadow-2xl'}`}>
-         <button 
-           onClick={() => setIsDashboardMinimized(true)}
-           className="absolute top-1/2 left-0 transform -translate-y-1/2 -translate-x-1/2 bg-gradient-to-r from-blue-600 to-indigo-600 p-1.5 rounded-full border-2 border-slate-900 text-white z-50 shadow-[0_0_15px_rgba(79,70,229,0.6)] hover:scale-110 hover:shadow-[0_0_25px_rgba(79,70,229,0.8)] transition-all duration-300"
-           style={{ zIndex: 1000 }}
-         >
-           <ChevronRight size={20} />
-         </button>
-         
-         <div className="p-4 w-full h-full overflow-y-auto custom-scrollbar">
+
+      {/* Floating Tactical Sidebar */}
+      <div className={`absolute top-4 bottom-4 right-4 z-10 flex flex-col glass-panel rounded-3xl overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${isDashboardMinimized ? 'w-0 opacity-0 pointer-events-none translate-x-12' : 'w-[480px] opacity-100 shadow-[0_0_40px_rgba(0,0,0,0.8)] border border-white/10 translate-x-0'}`}>
+         <div className="p-6 w-full h-full overflow-y-auto custom-scrollbar">
             <Dashboard districts={districts} selectedDistrict={selectedDistrict} onClose={() => setSelectedDistrictId(null)} />
          </div>
       </div>
       
-      {/* External toggle button when minimized */}
+      {/* Sidebar Toggle */}
       <button 
-         onClick={() => setIsDashboardMinimized(false)}
-         className={`absolute top-1/2 right-4 transform -translate-y-1/2 bg-gradient-to-r from-indigo-600 to-blue-600 p-2 rounded-full border-2 border-slate-900 text-white z-50 shadow-[0_0_20px_rgba(79,70,229,0.6)] hover:scale-110 transition-all duration-500 ease-in-out ${isDashboardMinimized ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10 pointer-events-none'}`}
+         onClick={() => setIsDashboardMinimized(!isDashboardMinimized)}
+         className={`absolute top-1/2 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] transform -translate-y-1/2 bg-zinc-900/90 p-3 rounded-full border border-white/10 text-white z-50 shadow-[0_0_20px_rgba(0,0,0,0.5)] hover:scale-110 hover:bg-zinc-800 backdrop-blur-md ${isDashboardMinimized ? 'right-6' : 'right-[466px]'}`}
        >
-         <ChevronLeft size={24} />
+         {isDashboardMinimized ? <ChevronLeft size={20} className="text-blue-400 drop-shadow-[0_0_8px_rgba(96,165,250,0.8)]" /> : <ChevronRight size={20} className="text-zinc-400" />}
        </button>
       {selectedDistrict && showMindmap && (
         <Rnd
@@ -105,12 +100,12 @@ function App() {
           minWidth={300}
           minHeight={200}
           bounds="window"
-          className="z-50 rounded-xl shadow-2xl border border-slate-700 bg-slate-900"
+          className="z-50 rounded-2xl shadow-[0_0_40px_rgba(0,0,0,0.8)] border border-white/10 glass-panel overflow-hidden"
           dragHandleClassName="drag-handle"
           style={{ display: 'flex', flexDirection: 'column' }}
         >
-          <div className="drag-handle bg-slate-800 px-4 py-2 cursor-move flex items-center justify-between border-b border-slate-700">
-            <h3 className="font-bold text-sm text-slate-200">Risk Mindmap</h3>
+          <div className="drag-handle bg-zinc-900/50 px-5 py-3 cursor-move flex items-center justify-between border-b border-white/10 backdrop-blur-md">
+            <h3 className="font-bold text-xs uppercase tracking-widest text-zinc-300">Tactical Mindmap</h3>
             <div className="flex gap-2">
               <button 
                 onClick={() => setShowMindmap(false)} 

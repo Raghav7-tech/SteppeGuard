@@ -58,41 +58,41 @@ export default function FloatingChat() {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className={`fixed bottom-6 right-6 p-4 rounded-full bg-blue-600 text-white shadow-lg shadow-blue-600/30 hover:bg-blue-700 transition-all z-50 ${isOpen ? 'scale-0' : 'scale-100'}`}
+        className={`fixed bottom-6 right-6 p-4 rounded-full bg-blue-600 text-white shadow-[0_0_20px_rgba(37,99,235,0.6)] hover:bg-blue-500 hover:scale-110 transition-all duration-300 z-50 border-2 border-blue-400/50 ${isOpen ? 'scale-0' : 'scale-100'}`}
       >
         <MessageSquare size={24} />
       </button>
 
       {isOpen && (
-        <div className="fixed bottom-6 right-6 w-80 sm:w-96 h-[500px] bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl flex flex-col overflow-hidden z-50">
-          <div className="p-4 bg-slate-800 border-b border-slate-700 flex justify-between items-center">
-            <h3 className="font-bold text-slate-100 flex items-center gap-2">
-              <MessageSquare size={18} className="text-blue-400" />
-              SteppeGuard AI
+        <div className="fixed bottom-6 right-6 w-80 sm:w-96 h-[500px] glass-panel rounded-2xl flex flex-col overflow-hidden z-50 border border-white/10 shadow-[0_0_40px_rgba(0,0,0,0.8)]">
+          <div className="p-4 bg-zinc-900/80 border-b border-white/10 flex justify-between items-center backdrop-blur-xl">
+            <h3 className="font-bold text-white flex items-center gap-2 uppercase tracking-widest text-xs">
+              <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+              Secure Comms
             </h3>
             <div className="flex items-center gap-2">
               <select 
                 value={language} 
                 onChange={(e) => setLanguage(e.target.value)}
-                className="bg-slate-700 text-xs text-white rounded px-2 py-1 outline-none border border-slate-600 focus:border-blue-500"
+                className="bg-zinc-800 text-[10px] text-zinc-300 rounded uppercase tracking-widest px-2 py-1 outline-none border border-white/5 focus:border-blue-500 transition-colors"
               >
-                <option value="English">English</option>
-                <option value="Kazakh">Қазақша</option>
-                <option value="Russian">Русский</option>
+                <option value="English">EN</option>
+                <option value="Kazakh">KZ</option>
+                <option value="Russian">RU</option>
               </select>
-              <button onClick={() => setIsOpen(false)} className="text-slate-400 hover:text-white transition-colors">
-                <X size={20} />
+              <button onClick={() => setIsOpen(false)} className="text-zinc-500 hover:text-white transition-colors">
+                <X size={18} />
               </button>
             </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-900/50">
+          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-zinc-950/60 custom-scrollbar">
             {messages.map((msg, i) => (
               <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[80%] rounded-xl p-3 text-sm ${
+                <div className={`max-w-[85%] rounded-lg p-3 text-sm ${
                   msg.role === 'user' 
-                    ? 'bg-blue-600 text-white rounded-br-none' 
-                    : 'bg-slate-800 text-slate-200 border border-slate-700 rounded-bl-none'
+                    ? 'bg-blue-600 text-white rounded-tr-sm border border-blue-500/50 shadow-[0_0_15px_rgba(37,99,235,0.3)]' 
+                    : 'bg-zinc-800/80 text-zinc-200 border border-white/10 rounded-tl-sm backdrop-blur-md'
                 }`}>
                   {msg.content}
                 </div>
@@ -100,28 +100,29 @@ export default function FloatingChat() {
             ))}
             {isLoading && (
               <div className="flex justify-start">
-                <div className="bg-slate-800 text-slate-400 border border-slate-700 rounded-xl rounded-bl-none p-3">
-                  <Loader2 size={16} className="animate-spin" />
+                <div className="bg-zinc-800/80 text-blue-400 border border-white/10 rounded-lg rounded-tl-sm p-3 backdrop-blur-md flex items-center gap-2">
+                  <Loader2 size={14} className="animate-spin" />
+                  <span className="text-[10px] uppercase tracking-widest">Decrypting...</span>
                 </div>
               </div>
             )}
             <div ref={messagesEndRef} />
           </div>
 
-          <div className="p-4 bg-slate-800 border-t border-slate-700">
+          <div className="p-4 bg-zinc-900/90 border-t border-white/10 backdrop-blur-xl">
             <div className="flex gap-2">
               <input
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                placeholder="Ask about risk predictions..."
-                className="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-blue-500 transition-colors"
+                placeholder="Enter command..."
+                className="flex-1 bg-zinc-950 border border-white/10 rounded-md px-3 py-2 text-sm text-zinc-200 focus:outline-none focus:border-blue-500 transition-colors font-mono"
               />
               <button
                 onClick={handleSend}
                 disabled={isLoading || !input.trim()}
-                className="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="p-2 bg-blue-600 text-white rounded-md hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors border border-blue-500/50 shadow-[0_0_10px_rgba(37,99,235,0.4)]"
               >
                 <Send size={18} />
               </button>

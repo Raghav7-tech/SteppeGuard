@@ -45,67 +45,67 @@ export default function Dashboard({ districts, selectedDistrict, onClose }) {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 tracking-tight glow-text">SteppeGuard Dashboard</h2>
-        <div className="glass-panel text-red-400 px-4 py-1.5 rounded-full text-sm font-bold flex items-center gap-2 shadow-[0_0_20px_rgba(239,68,68,0.4)] animate-pulse border-red-500/30 border">
-          <AlertTriangle size={18} /> Live Data Active
+      <div className="flex items-center justify-between mb-2">
+        <h2 className="text-3xl font-black text-white tracking-widest uppercase drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">Command Center</h2>
+        <div className="bg-zinc-900/80 text-amber-500 px-3 py-1.5 rounded-md text-xs font-bold flex items-center gap-2 shadow-[0_0_15px_rgba(245,158,11,0.2)] border border-amber-500/30 uppercase tracking-widest">
+          <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span> Live Uplink
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-5">
-        <div className="glass-panel p-6 rounded-3xl relative overflow-hidden group hover:border-red-500/40 hover:shadow-[0_0_30px_rgba(239,68,68,0.2)] transition-all duration-500">
-           <div className="absolute -top-4 -right-4 p-4 text-red-500/10 group-hover:text-red-500/30 transition-colors transform group-hover:scale-125 duration-700 ease-out"><Flame size={100} /></div>
-           <p className="text-slate-400 text-sm font-semibold uppercase tracking-wider mb-2">Active Fires</p>
-           <p className="text-5xl font-black text-white drop-shadow-lg">{districts.reduce((sum, d) => sum + d.active_fire_points, 0)}</p>
+      <div className="grid grid-cols-2 gap-4">
+        <div className="bg-zinc-900/60 backdrop-blur-md border border-white/5 p-5 rounded-2xl shadow-lg relative overflow-hidden group hover:border-red-500/40 hover:bg-zinc-900/80 transition-all duration-300">
+           <div className="absolute -top-2 -right-2 p-3 text-red-500/10 group-hover:text-red-500/20 transition-colors transform group-hover:scale-110 duration-500"><Flame size={80} /></div>
+           <p className="text-zinc-400 text-xs font-bold uppercase tracking-widest mb-1 relative z-10">Active Fires</p>
+           <p className="text-4xl font-black text-white drop-shadow-md relative z-10">{districts.reduce((sum, d) => sum + d.active_fire_points, 0)}</p>
         </div>
-        <div className="glass-panel p-6 rounded-3xl relative overflow-hidden group hover:border-orange-500/40 hover:shadow-[0_0_30px_rgba(249,115,22,0.2)] transition-all duration-500">
-           <div className="absolute -top-4 -right-4 p-4 text-orange-500/10 group-hover:text-orange-500/30 transition-colors transform group-hover:scale-125 duration-700 ease-out"><AlertTriangle size={100} /></div>
-           <p className="text-slate-400 text-sm font-semibold uppercase tracking-wider mb-2">Districts at Risk</p>
-           <p className="text-5xl font-black text-white drop-shadow-lg">{districts.filter(d => d.risk_level === 'CRITICAL' || d.risk_level === 'HIGH').length}</p>
+        <div className="bg-zinc-900/60 backdrop-blur-md border border-white/5 p-5 rounded-2xl shadow-lg relative overflow-hidden group hover:border-amber-500/40 hover:bg-zinc-900/80 transition-all duration-300">
+           <div className="absolute -top-2 -right-2 p-3 text-amber-500/10 group-hover:text-amber-500/20 transition-colors transform group-hover:scale-110 duration-500"><AlertTriangle size={80} /></div>
+           <p className="text-zinc-400 text-xs font-bold uppercase tracking-widest mb-1 relative z-10">At Risk Sectors</p>
+           <p className="text-4xl font-black text-white drop-shadow-md relative z-10">{districts.filter(d => d.risk_level === 'CRITICAL' || d.risk_level === 'HIGH').length}</p>
         </div>
       </div>
 
       {selectedDistrict ? (
-        <div className="glass-panel p-7 rounded-3xl relative overflow-hidden transform transition-all">
-          <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
+        <div className="bg-zinc-900/70 backdrop-blur-2xl border border-white/10 p-6 rounded-3xl shadow-2xl relative overflow-hidden transform transition-all">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-blue-500"></div>
           <div className="flex justify-between items-start mb-6">
             <div>
-              <h3 className="text-xl font-bold text-slate-100">{selectedDistrict.district_name}</h3>
-              <p className="text-slate-400 text-sm">Detailed Analysis</p>
+              <h3 className="text-2xl font-black text-white uppercase tracking-wider drop-shadow-md">{selectedDistrict.district_name}</h3>
+              <p className="text-zinc-400 text-xs font-bold uppercase tracking-widest mt-1">Sector Analysis</p>
             </div>
             <div className="flex items-center gap-3">
-              <div className={`px-3 py-1 rounded font-bold text-sm ${
-                  selectedDistrict.risk_level === 'CRITICAL' ? 'bg-red-500 text-white shadow-[0_0_10px_rgba(239,68,68,0.5)]' :
-                  selectedDistrict.risk_level === 'HIGH' ? 'bg-orange-500 text-white shadow-[0_0_10px_rgba(249,115,22,0.5)]' :
-                  'bg-green-500 text-white'
+              <div className={`px-4 py-1.5 rounded-md font-black text-xs uppercase tracking-widest border ${
+                  selectedDistrict.risk_level === 'CRITICAL' ? 'bg-red-500/20 text-red-400 border-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.4)]' :
+                  selectedDistrict.risk_level === 'HIGH' ? 'bg-amber-500/20 text-amber-400 border-amber-500/50 shadow-[0_0_15px_rgba(245,158,11,0.4)]' :
+                  'bg-emerald-500/20 text-emerald-400 border-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.4)]'
                 }`}>
                 {selectedDistrict.risk_level}
               </div>
               <button 
                 onClick={onClose} 
-                className="text-slate-400 hover:text-white transition-colors"
+                className="p-1.5 text-zinc-400 hover:text-white bg-zinc-800/50 hover:bg-zinc-700 rounded-md transition-colors border border-white/5"
                 title="Close Info"
               >
-                <X size={20} />
+                <X size={18} />
               </button>
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-4 mb-8">
-            <div className="flex flex-col items-center p-5 bg-slate-900/40 backdrop-blur-md rounded-2xl border border-white/5 shadow-inner hover:border-blue-500/40 hover:bg-slate-900/60 transition-all duration-300 transform hover:-translate-y-1">
-               <Wind className="text-blue-400 mb-3 drop-shadow-[0_0_8px_rgba(96,165,250,0.6)] animate-float" size={28} />
-               <span className="text-xl font-black text-white">{weather ? `${weather.wind_speed_ms} m/s` : '-- m/s'}</span>
-               <span className="text-xs text-blue-300 uppercase font-bold tracking-widest mt-1">Wind</span>
+          <div className="grid grid-cols-3 gap-3 mb-6">
+            <div className="flex flex-col items-center p-4 bg-zinc-900/60 rounded-xl border border-white/5 hover:border-blue-500/30 hover:bg-zinc-800/60 transition-all duration-300">
+               <Wind className="text-blue-400 mb-2" size={24} />
+               <span className="text-lg font-black text-white">{weather ? `${weather.wind_speed_ms} m/s` : '-- m/s'}</span>
+               <span className="text-[10px] text-zinc-500 uppercase font-bold tracking-widest mt-1">Wind</span>
             </div>
-            <div className="flex flex-col items-center p-5 bg-slate-900/40 backdrop-blur-md rounded-2xl border border-white/5 shadow-inner hover:border-orange-500/40 hover:bg-slate-900/60 transition-all duration-300 transform hover:-translate-y-1">
-               <ThermometerSun className="text-orange-400 mb-3 drop-shadow-[0_0_8px_rgba(251,146,60,0.6)]" size={28} />
-               <span className="text-xl font-black text-white">{weather ? `${weather.temperature_c}°C` : '--°C'}</span>
-               <span className="text-xs text-orange-300 uppercase font-bold tracking-widest mt-1">Temp</span>
+            <div className="flex flex-col items-center p-4 bg-zinc-900/60 rounded-xl border border-white/5 hover:border-amber-500/30 hover:bg-zinc-800/60 transition-all duration-300">
+               <ThermometerSun className="text-amber-400 mb-2" size={24} />
+               <span className="text-lg font-black text-white">{weather ? `${weather.temperature_c}°C` : '--°C'}</span>
+               <span className="text-[10px] text-zinc-500 uppercase font-bold tracking-widest mt-1">Temp</span>
             </div>
-            <div className="flex flex-col items-center p-5 bg-slate-900/40 backdrop-blur-md rounded-2xl border border-white/5 shadow-inner hover:border-cyan-500/40 hover:bg-slate-900/60 transition-all duration-300 transform hover:-translate-y-1">
-               <Droplets className="text-cyan-400 mb-3 drop-shadow-[0_0_8px_rgba(34,211,238,0.6)] animate-float" size={28} style={{animationDelay: '1s'}} />
-               <span className="text-xl font-black text-white">{weather ? `${weather.humidity_pct}%` : '--%'}</span>
-               <span className="text-xs text-cyan-300 uppercase font-bold tracking-widest mt-1">Humidity</span>
+            <div className="flex flex-col items-center p-4 bg-zinc-900/60 rounded-xl border border-white/5 hover:border-cyan-500/30 hover:bg-zinc-800/60 transition-all duration-300">
+               <Droplets className="text-cyan-400 mb-2" size={24} />
+               <span className="text-lg font-black text-white">{weather ? `${weather.humidity_pct}%` : '--%'}</span>
+               <span className="text-[10px] text-zinc-500 uppercase font-bold tracking-widest mt-1">Humidity</span>
             </div>
           </div>
 
@@ -193,26 +193,26 @@ export default function Dashboard({ districts, selectedDistrict, onClose }) {
         </div>
       )}
 
-      <div className="mt-8">
-        <h3 className="text-xl font-bold text-slate-100 mb-5 tracking-tight flex items-center gap-2">Highest Risk Districts</h3>
-        <div className="glass-panel rounded-3xl overflow-hidden shadow-2xl">
+      <div className="mt-6">
+        <h3 className="text-sm font-bold text-zinc-400 uppercase tracking-widest mb-3">Threat Matrix</h3>
+        <div className="bg-zinc-900/60 backdrop-blur-md rounded-xl border border-white/5 overflow-hidden">
           <table className="w-full text-left text-sm">
-            <thead className="bg-slate-900/80 text-slate-300 border-b border-white/5">
+            <thead className="bg-zinc-900/80 text-zinc-500 border-b border-white/5">
               <tr>
-                <th className="p-5 font-bold uppercase tracking-wider text-xs text-indigo-300">District</th>
-                <th className="p-5 font-bold uppercase tracking-wider text-xs text-indigo-300 text-right">Fusion Score</th>
-                <th className="p-5 font-bold uppercase tracking-wider text-xs text-indigo-300 text-center">Status</th>
+                <th className="px-4 py-3 font-bold uppercase tracking-widest text-[10px]">Sector</th>
+                <th className="px-4 py-3 font-bold uppercase tracking-widest text-[10px] text-right">Score</th>
+                <th className="px-4 py-3 font-bold uppercase tracking-widest text-[10px] text-center">Status</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
               {topRisks.map((d) => (
-                <tr key={d.id} className="hover:bg-slate-800/60 transition-colors group">
-                  <td className="p-5 font-bold text-slate-200 group-hover:text-white transition-colors text-base">{d.district_name}</td>
-                  <td className="p-5 text-right font-mono font-bold text-lg">{d.fusion_score.toFixed(1)}</td>
-                  <td className="p-5">
-                     <div className={`mx-auto w-max px-4 py-1.5 rounded-full text-xs font-black shadow-lg uppercase tracking-wider ${
-                        d.risk_level === 'CRITICAL' ? 'bg-red-500/20 text-red-400 border border-red-500/40 shadow-[0_0_15px_rgba(239,68,68,0.3)]' :
-                        'bg-orange-500/20 text-orange-400 border border-orange-500/40 shadow-[0_0_15px_rgba(249,115,22,0.3)]'
+                <tr key={d.id} className="hover:bg-zinc-800/40 transition-colors group">
+                  <td className="px-4 py-3 font-bold text-zinc-300 group-hover:text-white transition-colors">{d.district_name}</td>
+                  <td className="px-4 py-3 text-right font-mono font-bold text-zinc-200">{d.fusion_score.toFixed(1)}</td>
+                  <td className="px-4 py-3">
+                     <div className={`mx-auto w-max px-3 py-1 rounded-md text-[10px] font-black uppercase tracking-widest border ${
+                        d.risk_level === 'CRITICAL' ? 'bg-red-500/10 text-red-400 border-red-500/30' :
+                        'bg-amber-500/10 text-amber-400 border-amber-500/30'
                      }`}>
                        {d.risk_level}
                      </div>
