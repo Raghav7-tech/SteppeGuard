@@ -56,7 +56,7 @@ npm run dev
 ```
 
 ### 3. Usage
-Once both servers are running, open `http://localhost:5173` in your browser. You can interact with the map, click on districts to view the risk mindmap, and use the floating SteppeGuard AI chat in the bottom right corner.
+Once both servers are running, open `http://localhost:5173` for locally running in your browser. You can interact with the map, click on districts to view the risk mindmap, and use the floating SteppeGuard AI chat in the bottom right corner.
 
 ## 📄 License
 
