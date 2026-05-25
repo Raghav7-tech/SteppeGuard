@@ -33,7 +33,7 @@ function App() {
       .catch(err => console.error("Error fetching data", err));
       
       
-    fetch(`${API_URL}/api/fires?confidence=nominal&timeframe_hours=168&t=${Date.now()}`)
+    fetch(`${API_URL}/api/fires?confidence=nominal&timeframe_hours=120&t=${Date.now()}`)
       .then(res => res.json())
       .then(data => {
         console.log("Raw Fire API Response:", data);
