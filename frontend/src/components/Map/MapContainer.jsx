@@ -52,7 +52,7 @@ export default function MapContainerComponent({ districts, fires = [], windGrid 
                     click: () => onSelectDistrict(d.district_id),
                   }}
                 >
-                  <Popup className="bg-slate-900 text-slate-100 p-2 rounded shadow-lg border border-slate-800">
+                  <Popup className="bg-zinc-900 text-zinc-100 p-2 rounded shadow-lg border border-zinc-800">
                     <h3 className="font-bold text-lg">{d.district_name}</h3>
                     <p>Risk: <span style={{ color: getMarkerColor(d.risk_level) }}>{d.risk_level}</span></p>
                     <p>Fusion Score: {d.fusion_score}</p>
@@ -77,7 +77,7 @@ export default function MapContainerComponent({ districts, fires = [], windGrid 
                      weight: 2
                   }}
                 >
-                  <Popup className="bg-slate-900 text-slate-100 p-1 text-sm rounded border border-red-500">
+                  <Popup className="bg-zinc-900 text-zinc-100 p-1 text-sm rounded border border-red-500">
                     <span className="text-red-400 font-bold flex items-center gap-1">
                       🔥 Active Fire
                     </span>
@@ -90,16 +90,16 @@ export default function MapContainerComponent({ districts, fires = [], windGrid 
       </MapContainer>
       
       {/* Legend Overlay */}
-      <div className="absolute bottom-6 left-6 z-[1000] bg-slate-900/90 p-4 rounded-lg border border-slate-800 backdrop-blur-sm">
-        <h4 className="text-sm font-semibold mb-2 text-slate-300 uppercase tracking-wider">Risk Level</h4>
+      <div className="absolute bottom-6 left-6 z-[1000] bg-zinc-900/90 p-4 rounded-lg border border-zinc-800 backdrop-blur-sm">
+        <h4 className="text-sm font-semibold mb-2 text-zinc-300 uppercase tracking-wider">Risk Level</h4>
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.6)]"></div> <span className="text-sm">CRITICAL</span></div>
           <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.6)]"></div> <span className="text-sm">HIGH</span></div>
           <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-yellow-500 shadow-[0_0_8px_rgba(234,179,8,0.6)]"></div> <span className="text-sm">MEDIUM</span></div>
           <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]"></div> <span className="text-sm">LOW</span></div>
-          <div className="flex items-center gap-2 mt-2 pt-2 border-t border-slate-700">
+          <div className="flex items-center gap-2 mt-2 pt-2 border-t border-zinc-700">
              <div className="w-6 h-0.5 bg-orange-500 shadow-[0_0_5px_rgba(249,115,22,0.8)]"></div>
-             <span className="text-sm text-slate-300">Predicted Fire Spread Vector</span>
+             <span className="text-sm text-zinc-300">Predicted Fire Spread Vector</span>
           </div>
         </div>
       </div>

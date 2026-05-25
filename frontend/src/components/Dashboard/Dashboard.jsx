@@ -110,7 +110,7 @@ export default function Dashboard({ districts, selectedDistrict, onClose }) {
           </div>
 
           <div className="h-48 mt-4">
-            <h4 className="text-sm font-semibold text-slate-400 mb-2">48h Spread Probability</h4>
+            <h4 className="text-sm font-semibold text-zinc-400 mb-2">48h Spread Probability</h4>
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={predictions?.timeline || [
                   { time: 'Now', prob: 20 }, { time: '+12h', prob: 45 }, { time: '+24h', prob: 75 }, { time: '+48h', prob: 88 }
@@ -121,8 +121,8 @@ export default function Dashboard({ districts, selectedDistrict, onClose }) {
                     <stop offset="95%" stopColor="#ef4444" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
-                <XAxis dataKey="time" stroke="#64748b" fontSize={12} />
-                <YAxis stroke="#64748b" fontSize={12} />
+                <XAxis dataKey="time" stroke="#a1a1aa" fontSize={12} />
+                <YAxis stroke="#a1a1aa" fontSize={12} />
                 <Tooltip 
                   contentStyle={{ backgroundColor: '#0f172a', borderColor: '#1e293b' }}
                   itemStyle={{ color: '#f8fafc' }}
@@ -133,37 +133,37 @@ export default function Dashboard({ districts, selectedDistrict, onClose }) {
           </div>
 
           <div className="mt-6">
-            <h4 className="text-sm font-semibold text-slate-400 mb-3 flex items-center gap-2">
+            <h4 className="text-sm font-semibold text-zinc-400 mb-3 flex items-center gap-2">
               <Truck size={16} /> Nearest Control Officials
             </h4>
             <div className="space-y-3">
               {officials.length > 0 ? officials.map(off => (
-                <div key={off.id} className="bg-slate-950 p-3 rounded-lg border border-slate-800 flex justify-between items-center">
+                <div key={off.id} className="bg-zinc-950 p-3 rounded-lg border border-zinc-800 flex justify-between items-center">
                   <div>
-                    <h5 className="font-bold text-slate-200 text-sm">{off.name}</h5>
-                    <p className="text-xs text-slate-500">{off.type} • {off.distance_km} km away</p>
+                    <h5 className="font-bold text-zinc-200 text-sm">{off.name}</h5>
+                    <p className="text-xs text-zinc-500">{off.type} • {off.distance_km} km away</p>
                     <p className="text-xs text-blue-400 mt-1 flex items-center gap-1"><Phone size={12} /> {off.contact}</p>
                   </div>
                   <div className="text-right">
                     <div className="text-xs font-semibold text-orange-400">{off.response_time_mins}m ETA</div>
-                    <div className="text-xs text-slate-500 mt-1">{off.personnel_available} personnel</div>
+                    <div className="text-xs text-zinc-500 mt-1">{off.personnel_available} personnel</div>
                   </div>
                 </div>
               )) : (
-                <div className="text-sm text-slate-500 italic">No official data available.</div>
+                <div className="text-sm text-zinc-500 italic">No official data available.</div>
               )}
             </div>
           </div>
           <div className="mt-6">
-            <h4 className="text-sm font-semibold text-slate-400 mb-3 flex items-center gap-2">
+            <h4 className="text-sm font-semibold text-zinc-400 mb-3 flex items-center gap-2">
               <AlertCircle size={16} /> Possible Fire Eruption Reasons
             </h4>
             <div className="space-y-3">
               {factors.length > 0 ? factors.map((factor, idx) => (
-                <div key={idx} className="bg-slate-950 p-3 rounded-lg border border-slate-800 flex justify-between items-center">
+                <div key={idx} className="bg-zinc-950 p-3 rounded-lg border border-zinc-800 flex justify-between items-center">
                   <div className="flex-1">
-                    <h5 className="font-bold text-slate-200 text-sm">{factor.name}</h5>
-                    <div className="w-full bg-slate-800 rounded-full h-1.5 mt-2">
+                    <h5 className="font-bold text-zinc-200 text-sm">{factor.name}</h5>
+                    <div className="w-full bg-zinc-800 rounded-full h-1.5 mt-2">
                       <div className="bg-orange-500 h-1.5 rounded-full" style={{ width: `${factor.probability * 100}%` }}></div>
                     </div>
                   </div>
@@ -172,24 +172,24 @@ export default function Dashboard({ districts, selectedDistrict, onClose }) {
                       factor.severity === 'CRITICAL' ? 'bg-red-500/20 text-red-400' :
                       factor.severity === 'HIGH' ? 'bg-orange-500/20 text-orange-400' :
                       factor.severity === 'MEDIUM' ? 'bg-yellow-500/20 text-yellow-400' :
-                      'bg-slate-500/20 text-slate-400'
+                      'bg-zinc-500/20 text-zinc-400'
                     }`}>
                       {factor.severity}
                     </div>
-                    <div className="text-xs text-slate-500 mt-1">{Math.round(factor.probability * 100)}% Prob</div>
+                    <div className="text-xs text-zinc-500 mt-1">{Math.round(factor.probability * 100)}% Prob</div>
                   </div>
                 </div>
               )) : (
-                <div className="text-sm text-slate-500 italic">No eruption factors available.</div>
+                <div className="text-sm text-zinc-500 italic">No eruption factors available.</div>
               )}
             </div>
           </div>
         </div>
       ) : (
-        <div className="bg-slate-900 border border-slate-800 p-6 rounded-xl shadow-lg flex flex-col items-center justify-center text-center h-64">
-           <MapPinIcon className="w-12 h-12 text-slate-600 mb-4" />
-           <h3 className="text-lg font-semibold text-slate-300">Select a District</h3>
-           <p className="text-sm text-slate-500 max-w-xs mt-2">Click on a district marker on the map to view detailed risk analysis and 48-hour spread prediction.</p>
+        <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-xl shadow-lg flex flex-col items-center justify-center text-center h-64">
+           <MapPinIcon className="w-12 h-12 text-zinc-600 mb-4" />
+           <h3 className="text-lg font-semibold text-zinc-300">Select a District</h3>
+           <p className="text-sm text-zinc-500 max-w-xs mt-2">Click on a district marker on the map to view detailed risk analysis and 48-hour spread prediction.</p>
         </div>
       )}
 

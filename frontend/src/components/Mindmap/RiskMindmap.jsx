@@ -5,9 +5,11 @@ export default function RiskMindmap({ district }) {
   const isCritical = district.risk_level === 'CRITICAL';
   const [factors, setFactors] = useState([]);
 
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+
   useEffect(() => {
     if (district) {
-      fetch(`https://steppeguard.onrender.com/api/factors/${district.district_id}`)
+      fetch(`${API_URL}/api/factors/${district.district_id}`)
         .then(res => res.json())
         .then(data => setFactors(data.factors || []))
         .catch(err => console.error(err));
@@ -127,8 +129,8 @@ export default function RiskMindmap({ district }) {
   }, [isCritical, factors]);
 
   return (
-    <div className="h-full w-full relative bg-slate-950">
-      <div className="absolute top-2 left-4 z-10 text-slate-300 font-bold text-sm tracking-widest uppercase">
+    <div className="h-full w-full relative bg-zinc-950">
+      <div className="absolute top-2 left-4 z-10 text-zinc-300 font-bold text-sm tracking-widest uppercase">
         Causal Risk Chain
       </div>
       <ReactFlow 
@@ -138,8 +140,8 @@ export default function RiskMindmap({ district }) {
         attributionPosition="bottom-right"
         proOptions={{ hideAttribution: true }}
       >
-        <Background color="#1e293b" gap={16} size={1} />
-        <Controls showInteractive={false} className="bg-slate-900 border-slate-800 fill-slate-300" />
+        <Background color="#27272a" gap={16} size={1} />
+        <Controls showInteractive={false} className="bg-zinc-900 border-zinc-800 fill-zinc-300" />
       </ReactFlow>
     </div>
   );
